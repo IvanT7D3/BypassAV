@@ -26,5 +26,7 @@ By using 5-TsarWiper-APIHashing.c and 4-ModFile.c, I was able to bypass Windows 
 
 ## Compilation
 If you are compiling from Linux, you can use:
+
 x86_64-w64-mingw32-gcc file.c -o file.exe : To compile Windows executables
+
 gcc file.c -o file : To compile Linux ELF executables
