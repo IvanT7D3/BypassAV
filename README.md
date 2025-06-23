@@ -20,7 +20,7 @@ By using 5-TsarWiper-APIHashing.c and 4-ModFile.c, I was able to bypass Windows 
 
 3-Shellcode2-APIHashing.c : Shellcode injection using API hashing (VirtualProtect).
 
-4-ModFile.c : Add zeros up to 900 MBs of space to increase the size of an executable.
+4-ModFile.c : Add up to 900 MBs of random data at the end of the file to increase its size.
 
 5-TsarWiper-APIHashing.c : TsarWiper using API hashing (No MBR Wiper)
 
