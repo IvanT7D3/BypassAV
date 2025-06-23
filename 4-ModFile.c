@@ -76,8 +76,9 @@ int main(int argc, char *argv[])
 	size_t Seed;
 	if (getrandom(&Seed, sizeof(Seed), 0) == -1)
 	{
-		printf("[-] Seed generation failed... Defaulting to srand with time(NULL)!\n");
-		srand((unsigned int) time(NULL));
+		time_t Seed2 = time(NULL);
+		srand((unsigned int) Seed2);
+		printf("[-] Random seed generation failed. Defaulting to srand with time(NULL). Seed is: %zX\n", Seed2);
 	}
 	else
 	{
