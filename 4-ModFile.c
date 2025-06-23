@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/random.h>
 
 int main(int argc, char *argv[])
 {
@@ -71,7 +73,22 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	memset(Buffer + Size, 0, BytesToAdd);
+	size_t Seed;
+	if (getrandom(&Seed, sizeof(Seed), 0) == -1)
+	{
+		printf("[-] Seed generation failed... Defaulting to srand with time(NULL)!\n");
+		srand((unsigned int) time(NULL));
+	}
+	else
+	{
+		srand((unsigned int)Seed);
+		printf("[+] Random seed: 0x%zX\n", Seed);
+	}
+
+	for (int i = 0; i < BytesToAdd; i++)
+	{
+		Buffer[Size + i] = rand() % 256;
+	}
 
 	size_t BytesWritten = fwrite(Buffer, 1, TotalBytes, Output);
 	if (BytesWritten != TotalBytes)
